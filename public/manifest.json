@@ -1,0 +1,6 @@
+{
+  "short_name": "XcobExchange",
+  "name": "XcobExchange",
+  "start_url": "./index.html",
+  "display": "standalone",
+}

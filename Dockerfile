@@ -1,11 +1,18 @@
-FROM node:10.11
+FROM node:10.11 AS build
+WORKDIR  /app
+ENV PATH  /app/node_modules/.bin:$PATH
 
-WORKDIR /home/node
-COPY --chown=node:node . .
+COPY . /app
 
-USER node
-RUN yarn install
+
+RUN npm install --silent
+RUN npm run build
+#production
+FROM nginx:mainline-alpine
+COPY ./default-nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
+COPY --from=build /app/build /usr/share/nginx/html
 
 EXPOSE 3000
-
-CMD ["yarn", "start"]
+CMD ["nginx", "-g", "daemon off;"]
